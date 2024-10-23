@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+				trigger:
+				- main
+				pool:
+				  vmImage: 'windows-latest'
+				steps:
+				- task: UiPathPack@4
+				  inputs:
+				       versionType: 'CurrentVersion'
+				       projectJsonPath: '$(Build.SourcesDirectory)/project.json'
+				       orchestratorConnection: 'MyOrchCon'
+				       outputPath: '$(Build.ArtifactStagingDirectory)/output'
+				       runWorkflowAnalysis: 'true'
+				       tracelevel: 'verbose'
+				- task: UiPathDeploy@4
+				  inputs:
+				         orchestratorConnection: 'MyOrchCon'
+				         PackagesPath: '$(Build.ArtifactStagingDirectory)/output'
+				         Createprocess: true
+				         folderName: 'Shared'
+         tracelevel: 'verbose'
